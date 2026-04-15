@@ -15,7 +15,7 @@ echo 'load pg_normalized'
 echo '================================================================================'
 time for file in $files; do
     echo "$file"
-    python3 -u load_tweets.py --db postgresql+psycopg2://postgres:pass@localhost:58433/postgres --inputs "$file"
+    python3 -u load_tweets.py --db postgresql+psycopg2://postgres:pass@localhost:${PG_NORMALIZED_PORT:-58433}/postgres --inputs "$file"
 done
 
 echo '================================================================================'
@@ -23,5 +23,5 @@ echo 'load pg_normalized_batch'
 echo '================================================================================'
 time for file in $files; do
     echo "$file"
-    python3 -u load_tweets_batch.py --db=postgresql://postgres:pass@localhost:58434/postgres --inputs "$file"
+    python3 -u load_tweets_batch.py --db=postgresql://postgres:pass@localhost:${PG_NORMALIZED_BATCH_PORT:-58434}/postgres --inputs "$file"
 done

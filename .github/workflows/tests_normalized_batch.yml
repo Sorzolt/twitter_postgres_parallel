@@ -16,6 +16,9 @@ jobs:
       run: |
         git submodule init
         git submodule update
+        export PG_DENORMALIZED_PORT=65432
+        export PG_NORMALIZED_PORT=65433
+        export PG_NORMALIZED_BATCH_PORT=65434
         docker compose up -d --build
         docker ps -a
         sleep 20
