@@ -148,13 +148,13 @@ def insert_tweets(connection, tweets, batch_size=1000):
         max_attempts = 5
         for attempt in range(max_attempts):
             try:
-                _insert_tweets(connection, tweet_batch)
+                with connection.begin():
+                    _insert_tweets(connection, tweet_batch)
                 break
             except sqlalchemy.exc.OperationalError as e:
                 message = str(e).lower()
                 if 'deadlock detected' in message and attempt < max_attempts - 1:
                     print(datetime.datetime.now(), 'retrying batch after deadlock; i=', i, 'attempt=', attempt + 2)
-                    connection.rollback()
                     continue
                 raise
 
@@ -407,7 +407,6 @@ def _insert_tweets(connection,input_tweets):
             '''
             )
     res = connection.execute(sql, { key+str(i):value for i,tweet in enumerate(tweets) for key,value in tweet.items() })
-    connection.commit()
 
 
 if __name__ == '__main__':
